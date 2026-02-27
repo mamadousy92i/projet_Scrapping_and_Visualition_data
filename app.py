@@ -130,30 +130,27 @@ def download_button(df, filename, file_format):
     )
 
 # Titre principal
-st.title("🛍️ CoinAfrique Data Explorer")
+st.title("CoinAfrique Data Explorer")
 
 # Barre latérale pour la navigation
 with st.sidebar:
     st.markdown("<br>", unsafe_allow_html=True)
-    st.title("📌 Menu")
+    st.title("Menu")
     menu = st.radio(
         "Choisissez une fonctionnalité :",
         [
-            "🏠 Accueil & Scraping", 
-            "📂 Données brutes", 
-            "📊 Dashboard & Analyse", 
-            "📥 Importation CSV", 
-            "📝 Évaluation"
+            "Accueil & Scraping", 
+            "Données brutes", 
+            "Dashboard & Analyse", 
+            "Importation CSV", 
+            "Évaluation"
         ],
         label_visibility="collapsed"
     )
 
-# Conversion des noms de menu pour la logique interne
-menu_key = menu.split(" ")[1] if " " in menu else menu
-
 # --- SECTION 1 : SCRAPER DES DONNÉES ---
 if "Accueil" in menu:
-    st.header("🔍 Scraping en temps réel")
+    st.header("Scraping en temps réel")
     
     col1, col2 = st.columns(2)
     with col1:
@@ -186,7 +183,7 @@ if "Accueil" in menu:
 
 # --- SECTION 2 : DONNÉES BRUTES ---
 elif "Données" in menu:
-    st.header("🗄️ Consultation des données brutes")
+    st.header("Consultation des données brutes")
     st.info("Ces données proviennent de la table `data_brutes` de la base `BD_coinafrique`.")
     
     df_brut = charger_donnees("data_brutes")
@@ -204,7 +201,7 @@ elif "Données" in menu:
             liste_cats = sorted(df_brut['categorie_filtre'].unique().tolist())
             
             if liste_cats:
-                choix_cat = st.selectbox("🎯 Choisir la catégorie à afficher :", liste_cats)
+                choix_cat = st.selectbox("Choisir la catégorie à afficher :", liste_cats)
                 df_filtre = df_brut[df_brut['categorie_filtre'] == choix_cat].reset_index(drop=True)
             else:
                 df_filtre = df_brut.reset_index(drop=True)
@@ -238,7 +235,7 @@ elif "Données" in menu:
 
 # --- SECTION 3 : DASHBOARD & ANALYSE ---
 elif "Dashboard" in menu:
-    st.header("📊 Tableau de Bord des données nettoyées")
+    st.header("Tableau de Bord des données nettoyées")
     
     # 1. Chargement des données et jointure robuste pour la catégorie
     df_clean = charger_donnees("data_clean")
@@ -291,7 +288,7 @@ elif "Dashboard" in menu:
         
         # Sélecteur de catégorie filtré comme dans les données brutes
         liste_cats_brutes = sorted(df_nettoyee['categorie_exacte'].unique().tolist())
-        cat_dashboard = st.selectbox("🎯 Choisir la catégorie à afficher :", liste_cats_brutes)
+        cat_dashboard = st.selectbox("Choisir la catégorie à afficher :", liste_cats_brutes)
         
         df_dash = df_nettoyee[df_nettoyee['categorie_exacte'] == cat_dashboard].copy()
 
@@ -306,7 +303,7 @@ elif "Dashboard" in menu:
         st.divider()
         col_title, col_download = st.columns([4, 1])
         with col_title:
-            st.subheader(f"📋 Données nettoyées ({cat_dashboard})")
+            st.subheader(f"Données nettoyées ({cat_dashboard})")
         with col_download:
              download_button(df_dash, f"donnees_nettoyées_{cat_dashboard}", "CSV")
         
@@ -360,7 +357,7 @@ elif "Dashboard" in menu:
                 st.plotly_chart(fig_price, use_container_width=True)
 
         st.divider()
-        st.subheader("📦 Distribution Comparée des Prix par Catégorie")
+        st.subheader("Distribution Comparée des Prix par Catégorie")
         
         # Filtrer df_nettoyee pour enlever les prix nuls pour le graphique
         df_box = df_nettoyee[df_nettoyee['prix_num'].notna()].copy()
@@ -395,7 +392,7 @@ elif "Dashboard" in menu:
 
 # --- SECTION 4 : IMPORTATION ---
 elif "Importation" in menu:
-    st.header("📥 Importer vos données Web Scraper")
+    st.header("Importer vos données Web Scraper")
     st.write("Utilisez cette section pour charger vos fichiers CSV dans la base de données locale.")
     
     target_table = st.radio("Vers quelle table importer ?", ["donnees_brutes", "donnees_nettoyees"])
@@ -412,29 +409,53 @@ elif "Importation" in menu:
 
 # --- SECTION 5 : ÉVALUATION ---
 elif "Évaluation" in menu:
-    st.header("📝 Formulaire d'évaluation")
+    st.header("Formulaire d'évaluation")
     st.write("Votre avis nous intéresse ! Veuillez remplir le formulaire ci-dessous :")
     
-    url_kobo = "https://ee.kobotoolbox.org/x/gFdQf1a5"
-    st.markdown(f"""
-        <a href="{url_kobo}" target="_blank">
-            <button style="
-                background-color: #FF4B4B;
-                color: white;
-                padding: 15px 32px;
-                text-align: center;
-                text-decoration: none;
-                display: inline-block;
-                font-size: 16px;
-                margin: 4px 2px;
-                cursor: pointer;
-                border-radius: 8px;
-                border: none;
-            ">
-                Ouvrir le formulaire KoboToolbox
-            </button>
-        </a>
-    """, unsafe_allow_html=True)
+    col1, col2 = st.columns(2)
     
-    st.write("---")
-    st.write("Vous pouvez également accéder au Google Form correspondant (si disponible).")
+    with col1:
+        url_kobo = "https://ee.kobotoolbox.org/x/gFdQf1a5"
+        st.markdown(f"""
+            <a href="{url_kobo}" target="_blank">
+                <button style="
+                    background-color: #FF4B4B;
+                    color: white;
+                    padding: 15px 32px;
+                    text-align: center;
+                    text-decoration: none;
+                    display: inline-block;
+                    font-size: 16px;
+                    margin: 4px 2px;
+                    cursor: pointer;
+                    border-radius: 8px;
+                    border: none;
+                    width: 100%;
+                ">
+                    Ouvrir le formulaire KoboToolbox
+                </button>
+            </a>
+        """, unsafe_allow_html=True)
+        
+    with col2:
+        url_google = "https://docs.google.com/forms/d/e/1FAIpQLScwwjLJkbfJbjiIhKzn1-t1k-pXPQdQLpK8EuzYfuX23ybSNw/viewform"
+        st.markdown(f"""
+            <a href="{url_google}" target="_blank">
+                <button style="
+                    background-color: #4285F4;
+                    color: white;
+                    padding: 15px 32px;
+                    text-align: center;
+                    text-decoration: none;
+                    display: inline-block;
+                    font-size: 16px;
+                    margin: 4px 2px;
+                    cursor: pointer;
+                    border-radius: 8px;
+                    border: none;
+                    width: 100%;
+                ">
+                    Ouvrir le formulaire Google Forms
+                </button>
+            </a>
+        """, unsafe_allow_html=True)
